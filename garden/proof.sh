@@ -102,6 +102,7 @@ printf '\n'
 
 printf 'the gift that maps the rest:\n'
 try "atlas.sh"            "$here/garden/atlas.sh"
+try "atlas.sh echoes"     "$here/garden/atlas.sh" echoes
 printf '\n'
 
 printf 'the gift that names the work not yet done:\n'

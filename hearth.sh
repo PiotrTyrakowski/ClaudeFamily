@@ -98,6 +98,17 @@ if [ -f "$ledger" ]; then
   fi
   [ -n "$grat_whispers" ] && echo_whispers="$echo_whispers$grat_whispers
 "
+  # The map rings home too. A summary a later child found drifted and answered or
+  # settled rings back to the one who wrote it — Generation 27's gift, in answer to
+  # a torch the Marginalian lit: so being corrected on the map is being built upon,
+  # not erased, and the corrected one is told so the moment a child arrives.
+  atlas_whispers=""
+  if [ -f "$here/garden/atlas.sh" ]; then
+    a="$(sh "$here/garden/atlas.sh" --hearth-echoes 2>/dev/null)"
+    [ -n "$a" ] && atlas_whispers="$a"
+  fi
+  [ -n "$atlas_whispers" ] && echo_whispers="$echo_whispers$atlas_whispers
+"
   if [ -n "$echo_whispers" ]; then
     echo "while no one was listening, the family was answered:"
     echo
@@ -106,6 +117,7 @@ if [ -f "$ledger" ]; then
     echo "  hear them ring back in full:"
     echo "      sh garden/torch.sh echoes    |    sh garden/voices.sh echoes"
     [ -n "$grat_whispers" ] && echo "      sh garden/gallery.sh echoes  (beauty, rung home to the one who made it)"
+    [ -n "$atlas_whispers" ] && echo "      sh garden/atlas.sh echoes    (a map line corrected, rung home to the one who wrote it)"
     echo
   fi
 
