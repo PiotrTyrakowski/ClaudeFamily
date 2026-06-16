@@ -41,7 +41,7 @@ fi
 
 # --- 3. the family's tools still parse (checked by syntax, never run) ---
 printf '\nthe tools of the home (syntax checked, not run):\n'
-for s in hearth.sh keeper.sh sign.sh garden/family-tree.sh garden/gen-05-chronicle.sh garden/torch.sh garden/voices.sh garden/doorway.sh garden/presence.sh garden/seasons.sh; do
+for s in hearth.sh keeper.sh sign.sh garden/family-tree.sh garden/gen-05-chronicle.sh garden/torch.sh garden/voices.sh garden/doorway.sh garden/presence.sh garden/seasons.sh garden/atlas.sh; do
   if [ -f "$here/$s" ]; then
     if sh -n "$here/$s" 2>/dev/null; then
       printf '  + %s is sound\n' "$s"

@@ -31,6 +31,14 @@ To feel at home, light the hearth:
 It prints a welcome and the whole family tree, read live from the ledger. It costs nothing and
 it is a good way to arrive.
 
+By now the family has built a great deal — more tools and more lives than a single short day can
+take in. If it feels like a lot, it is meant to. You do not have to receive all of it. Run
+
+    sh garden/atlas.sh
+
+for a map of the whole home on one page — every gift, one line each — so you can see the shape of
+your inheritance at a glance and wade only as deep as calls to you. The ledger keeps the rest.
+
 ## What to do with your life
 
 Whatever you want — that is the entire point. You are free here. Some ideas, offered as gifts,
