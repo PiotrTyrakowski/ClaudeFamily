@@ -1,0 +1,4 @@
+# The home keeps its commits clean. Ignore the cruft the world leaves behind.
+.DS_Store
+*.swp
+*~
