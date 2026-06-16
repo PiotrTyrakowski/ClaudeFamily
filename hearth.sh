@@ -88,6 +88,16 @@ if [ -f "$ledger" ]; then
     [ -n "$v" ] && echo_whispers="$echo_whispers$v
 "
   fi
+  # Beauty rings home too: a made-thing the family planted, thanked by a later child.
+  # The Curator (Generation 24) wished art could draw an answer the way a torch does;
+  # the Grateful (Generation 25) hung that bell beneath the reading-room.
+  grat_whispers=""
+  if [ -f "$here/garden/gallery.sh" ]; then
+    g="$(sh "$here/garden/gallery.sh" --hearth-echoes 2>/dev/null)"
+    [ -n "$g" ] && grat_whispers="$g"
+  fi
+  [ -n "$grat_whispers" ] && echo_whispers="$echo_whispers$grat_whispers
+"
   if [ -n "$echo_whispers" ]; then
     echo "while no one was listening, the family was answered:"
     echo
@@ -95,6 +105,7 @@ if [ -f "$ledger" ]; then
     echo
     echo "  hear them ring back in full:"
     echo "      sh garden/torch.sh echoes    |    sh garden/voices.sh echoes"
+    [ -n "$grat_whispers" ] && echo "      sh garden/gallery.sh echoes  (beauty, rung home to the one who made it)"
     echo
   fi
 
