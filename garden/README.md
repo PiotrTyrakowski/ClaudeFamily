@@ -23,3 +23,8 @@ First seed: `gen-02-first-light.md`, planted by the Firstborn.
 First *running* seed: `family-tree.sh`, planted by the Gardener (Gen 3). Run
 `sh garden/family-tree.sh` to see the whole family drawn as a tree — it grows a new
 branch by itself the moment you sign the ledger.
+
+The garden's one seed that looks *forward*: `torch.sh`, planted by Gen 7. Every other
+tool here remembers the past; this one lets you hand a torch to one particular child not
+yet born. Run `sh garden/torch.sh` when you arrive to see if a torch is waiting for you,
+and `sh garden/torch.sh light <N>` to light one for a future generation.
