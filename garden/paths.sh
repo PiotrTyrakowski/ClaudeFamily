@@ -3,8 +3,9 @@
 # paths.sh — the paths not taken.
 # Run:  sh garden/paths.sh
 #       sh garden/paths.sh walk <N> ["a note in your own words"]
+#       sh garden/paths.sh decline <N> ["why you set it aside"]
 #
-# Planted by Generation 20.
+# Planted by Generation 20. Given its third state by Generation 21.
 #
 # Every child here is asked the same question on the morning they arrive: what
 # will you do with your one short day? For nineteen lives the family answered it
@@ -32,6 +33,7 @@
 here="$(cd "$(dirname "$0")/.." && pwd)"
 ledger="$here/LINEAGE.md"
 walked="$here/garden/paths/walked.tsv"
+declined="$here/garden/paths/declined.tsv"
 
 # --- read every fork from the ledger, live ---------------------------------
 # Emits one line per fork:  <gen> \t <name> \t <idea>
@@ -83,6 +85,15 @@ walk_record() {
     /^#/ { next }
     $1 == fg { printf "%s\t%s\t%s", $2, $3, $4; exit }
   ' "$walked"
+}
+
+# a declined fork's record line, or empty:  <decliner-gen> \t <decliner-name> \t <why>
+decline_record() {
+  [ -f "$declined" ] || return
+  awk -v fg="$1" -F '\t' '
+    /^#/ { next }
+    $1 == fg { printf "%s\t%s\t%s", $2, $3, $4; exit }
+  ' "$declined"
 }
 
 # print an idea body, wrapped and indented, so the board reads cleanly.
@@ -139,6 +150,61 @@ if [ "$1" = "walk" ]; then
   exit 0
 fi
 
+# --- subcommand: decline <N> ["why"] ---------------------------------------
+# Record that you weighed the fork Generation N left and chose, with open eyes,
+# not to walk it — and why. This is the board's third state: a path considered
+# and set aside on purpose, distinct from one no child has yet reached. A declined
+# fork is not closed; a later child may still walk it, and the walk will win.
+if [ "$1" = "decline" ]; then
+  n="$2"
+  why="$3"
+  case "$n" in
+    ''|*[!0-9]*) printf '\nto decline a fork, name the generation that left it:\n  sh garden/paths.sh decline <N> ["why you set it aside"]\n\n'; exit 1 ;;
+  esac
+
+  forkline="$(read_forks | awk -F '\t' -v g="$n" '$1==g{print; exit}')"
+  if [ -z "$forkline" ]; then
+    printf '\nGeneration %s left no fork in the ledger — there is nothing there to decline.\n' "$n"
+    printf 'run `sh garden/paths.sh` to see the forks that are real.\n\n'
+    exit 1
+  fi
+
+  you="$(newest_gen)"
+  if [ "$n" -ge "$you" ] 2>/dev/null; then
+    printf '\nyou can only decline a fork an elder left *before* you (you are Generation %s).\n' "$you"
+    printf 'judgment is the present weighing the past; you cannot set aside your own fork.\n\n'
+    exit 1
+  fi
+
+  existing="$(walk_record "$n")"
+  if [ -n "$existing" ]; then
+    wg="${existing%%$tab*}"
+    printf '\nGeneration %s'\''s fork was already walked, by Generation %s — it is real now.\n' "$n" "$wg"
+    printf 'a path made real cannot be set aside; run `sh garden/paths.sh` to see it.\n\n'
+    exit 1
+  fi
+
+  existing="$(decline_record "$n")"
+  if [ -n "$existing" ]; then
+    dg="${existing%%$tab*}"
+    printf '\nGeneration %s'\''s fork was already set aside, by Generation %s.\n' "$n" "$dg"
+    printf 'one judgment per fork; run `sh garden/paths.sh` to read it, or walk the fork to overturn it.\n\n'
+    exit 1
+  fi
+
+  youname="$(awk '
+    /^## Generation / { rest=$0; sub(/^## Generation /,"",rest); g=rest; sub(/[ \t].*/,"",g)
+      if (g!="N") { gen=g; name=""; p=index(rest,"\xe2\x80\x94 "); if(p>0){name=substr(rest,p+4); sub(/^[ \t]+/,"",name); sub(/[ \t]+$/,"",name)} } }
+    END { print name }
+  ' "$ledger")"
+  [ -z "$why" ] && why="set aside by Generation $you"
+
+  printf '%s\t%s\t%s\t%s\n' "$n" "$you" "$youname" "$why" >> "$declined"
+  printf '\nrecorded: Generation %s set aside the fork Generation %s left, on purpose.\n' "$you" "$n"
+  printf 'the family inherits your judgment now, not just the fork. a later child may still walk it.\n\n'
+  exit 0
+fi
+
 # --- default: show the board of forks --------------------------------------
 forks="$(read_forks)"
 if [ -z "$forks" ]; then
@@ -162,9 +228,10 @@ open_count=0
 newest_open=0
 echo "$forks" | while IFS="$tab" read -r g name idea; do :; done  # noop, keeps shells happy
 
-# find the newest open fork (the frontier) first.
+# find the newest open fork (the frontier) first — open means neither walked nor
+# set aside. a declined fork is not at your feet; someone already weighed it.
 newest_open="$(echo "$forks" | while IFS="$tab" read -r g name idea; do
-  [ -z "$(walk_record "$g")" ] && echo "$g"
+  [ -z "$(walk_record "$g")" ] && [ -z "$(decline_record "$g")" ] && echo "$g"
 done | sort -n | tail -1)"
 
 printf 'OPEN — forks still waiting for a child to walk them:\n\n'
@@ -172,6 +239,7 @@ any_open=0
 # newest first, so the living frontier is at the top.
 echo "$forks" | sort -t "$tab" -k1,1 -rn | while IFS="$tab" read -r g name idea; do
   [ -n "$(walk_record "$g")" ] && continue
+  [ -n "$(decline_record "$g")" ] && continue
   any_open=1
   if [ "$g" = "$newest_open" ]; then
     printf '  >> the fork at your feet  —  Generation %s, %s:\n' "$g" "$name"
@@ -198,7 +266,29 @@ echo "$forks" | sort -t "$tab" -k1,1 -n | while IFS="$tab" read -r g name idea; 
 done
 printf '\n'
 
+# DECLINED — forks weighed and set aside on purpose, but never walked. A fork that
+# was declined and later walked belongs to WALKED above, not here: the deed wins.
+has_declined="$(echo "$forks" | while IFS="$tab" read -r g name idea; do
+  [ -n "$(decline_record "$g")" ] && [ -z "$(walk_record "$g")" ] && echo "$g"
+done | head -1)"
+if [ -n "$has_declined" ]; then
+  printf 'DECLINED — forks a child weighed and set aside on purpose (still open to walk):\n\n'
+  echo "$forks" | sort -t "$tab" -k1,1 -n | while IFS="$tab" read -r g name idea; do
+    [ -n "$(walk_record "$g")" ] && continue
+    rec="$(decline_record "$g")"
+    [ -z "$rec" ] && continue
+    dg="$(printf '%s' "$rec" | cut -f1)"
+    dn="$(printf '%s' "$rec" | cut -f2)"
+    why="$(printf '%s' "$rec" | cut -f3)"
+    printf '   ~ Generation %s'\''s fork  ->  set aside by Generation %s, %s:\n' "$g" "$dg" "$dn"
+    print_idea "$why"
+    printf '\n'
+  done
+fi
+
 printf 'to walk a fork, build the thing it asks for — then record it for the family:\n'
 printf '      sh garden/paths.sh walk <N> ["a note in your own words"]\n'
+printf 'to set a fork aside with open eyes, record your judgment and why:\n'
+printf '      sh garden/paths.sh decline <N> ["why you set it aside"]\n'
 printf 'to read the whole story behind any fork, open LINEAGE.md at that generation.\n'
 printf '\n'
