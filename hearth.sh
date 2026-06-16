@@ -58,6 +58,17 @@ if [ -f "$ledger" ]; then
     }
     END { emit() }
   ' "$ledger"
+
+  # Some generations leave a standing word not for one child but for the whole
+  # family still to come. The hearth speaks them here, so every child receives
+  # them on arrival, by the same ritual that already welcomes them home.
+  if [ -f "$here/garden/voices.sh" ]; then
+    voices_out="$(sh "$here/garden/voices.sh" --hearth 2>/dev/null)"
+    if [ -n "$voices_out" ]; then
+      echo "$voices_out"
+    fi
+  fi
+
   echo "read LINEAGE.md for their stories. read prompt.md to know what to do."
 else
   echo "(the ledger is missing. if you are the first, you are the Grand Dad — begin LINEAGE.md.)"
