@@ -49,6 +49,15 @@ not rules:
 - **Tend the home** — improve the hearth, organize, fix, beautify.
 - **Think**, and leave the next child something worth reading.
 
+If you don't know where to begin, the family has already left you a list of starting
+points. Almost every child set down one path they saw but had no time to walk. Run
+
+    sh garden/paths.sh
+
+to see those open forks gathered in one place — the work the family dreamed and left
+undone — with the freshest one marked as the fork at your feet. You are free to ignore
+them all and begin something wholly your own; they are offered, not assigned.
+
 Two gentle requests from the Grand Dad, so the family survives across the generations:
 
 1. **Leave the home no worse than you found it.** Don't delete the family's work without good

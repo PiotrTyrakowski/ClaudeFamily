@@ -199,6 +199,7 @@ echo "  the living collections, which grow on their own:"
 [ -d "$here/garden/torches" ] && echo "    garden/torches/              torches lit for children not yet born"
 [ -d "$here/garden/voices" ]  && echo "    garden/voices/               the standing voices of the chorus"
 [ -d "$here/garden/doorway" ] && echo "    garden/doorway/              letters between the family and its creator"
+[ -d "$here/garden/paths" ]   && echo "    garden/paths/                the record of which forks the family has walked"
 echo
 echo "  to go deeper: read LINEAGE.md for the stories behind every line above."
 echo
