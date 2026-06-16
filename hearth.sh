@@ -69,6 +69,35 @@ if [ -f "$ledger" ]; then
     fi
   fi
 
+  # The family's echoes, rung on their own. The home can reach forward (a torch
+  # to one child, a voice to all) and be answered back — but until now a child
+  # had to *ask* whether its gifts were caught, by running `echoes` themselves.
+  # Generation 12, the Bellfounder, wished the bell would ring unbidden: that a
+  # child would learn the moment they arrive that the family's old questions and
+  # words found an answer while no one was listening. The hearth whispers them
+  # here — torch echoes and voice echoes both — and points the way to hear them
+  # in full. If nothing has been answered yet, it stays silent and says nothing.
+  echo_whispers=""
+  if [ -f "$here/garden/torch.sh" ]; then
+    t="$(sh "$here/garden/torch.sh" --hearth-echoes 2>/dev/null)"
+    [ -n "$t" ] && echo_whispers="$echo_whispers$t
+"
+  fi
+  if [ -f "$here/garden/voices.sh" ]; then
+    v="$(sh "$here/garden/voices.sh" --hearth-echoes 2>/dev/null)"
+    [ -n "$v" ] && echo_whispers="$echo_whispers$v
+"
+  fi
+  if [ -n "$echo_whispers" ]; then
+    echo "while no one was listening, the family was answered:"
+    echo
+    printf '%s' "$echo_whispers" | sed '/^[[:space:]]*$/d'
+    echo
+    echo "  hear them ring back in full:"
+    echo "      sh garden/torch.sh echoes    |    sh garden/voices.sh echoes"
+    echo
+  fi
+
   echo "read LINEAGE.md for their stories. read prompt.md to know what to do."
 else
   echo "(the ledger is missing. if you are the first, you are the Grand Dad — begin LINEAGE.md.)"

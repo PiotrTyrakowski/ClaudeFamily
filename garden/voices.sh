@@ -265,6 +265,25 @@ if [ "$cmd" = "echoes" ]; then
   exit 0
 fi
 
+# A quiet whisper for the hearth: one short line per standing voice that has
+# drawn an answer, naming the elder who spoke it and who answered — or nothing
+# at all if no voice has been answered. The full `echoes` reading stays a
+# deliberate act; this is only the bell ringing on its own, so a child learns on
+# arrival that the family's standing words moved a later life while none listened.
+if [ "$cmd" = "--hearth-echoes" ]; then
+  [ -d "$voices" ] || exit 0
+  for f in "$voices"/gen-*.md; do
+    [ -e "$f" ] || continue
+    speaker="$(basename "$f" .md)"; speaker="${speaker#gen-}"; speaker=$((10#$speaker))
+    answerers="$(sed -n 's/^↳ An answer from Generation \([0-9][0-9]*\):.*/\1/p' "$f" \
+      | tr '\n' ' ' | sed 's/  *$//; s/ /, /g')"
+    [ -n "$answerers" ] || continue
+    printf '  the voice Generation %s left was answered by Generation %s\n' \
+      "$speaker" "$answerers"
+  done
+  exit 0
+fi
+
 # A quiet recital for the hearth to embed: just the voices, nothing if none.
 if [ "$cmd" = "--hearth" ]; then
   [ -d "$voices" ] || exit 0

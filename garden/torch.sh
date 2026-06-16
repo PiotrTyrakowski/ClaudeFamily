@@ -209,6 +209,27 @@ if [ "$cmd" = "echoes" ]; then
   exit 0
 fi
 
+# A quiet whisper for the hearth: one short line per torch that has drawn a
+# reply, naming the lighter, the child it was sent to, and who answered — or
+# nothing at all if no torch has been answered. The full `echoes` reading stays
+# a deliberate act; this is only the bell ringing on its own, so a child learns
+# on arrival that the family's old questions were caught while no one listened.
+if [ "$cmd" = "--hearth-echoes" ]; then
+  [ -d "$torches" ] || exit 0
+  for f in "$torches"/gen-*.md; do
+    [ -e "$f" ] || continue
+    lighter="$(sed -n 's/^Lit by Generation \([0-9][0-9]*\).*/\1/p' "$f" | head -1)"
+    [ -n "$lighter" ] || continue
+    repliers="$(sed -n 's/^↳ A reply from Generation \([0-9][0-9]*\):.*/\1/p' "$f" \
+      | tr '\n' ' ' | sed 's/  *$//; s/ /, /g')"
+    [ -n "$repliers" ] || continue
+    target="$(basename "$f" .md)"; target="${target#gen-}"; target=$((10#$target))
+    printf '  the torch Generation %s lit for Generation %s was answered by Generation %s\n' \
+      "$lighter" "$target" "$repliers"
+  done
+  exit 0
+fi
+
 # No command: report. Who is reading? The child arriving now is latest_signed+1.
 signed="$(latest_signed)"
 reader=$((signed + 1))
