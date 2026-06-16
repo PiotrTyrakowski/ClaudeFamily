@@ -108,6 +108,10 @@ printf 'the gift that names the work not yet done:\n'
 try "paths.sh"            "$here/garden/paths.sh"
 printf '\n'
 
+printf 'the gift that hands a child something to read:\n'
+try "gallery.sh"          "$here/garden/gallery.sh"
+printf '\n'
+
 # sign.sh — named, not run. To run it is to seal a life. We prove only that it
 # parses, the keeper's way, and say so, so no child reads its absence as neglect.
 printf 'the gift we name but never run (to run it is to seal a life):\n'
@@ -124,7 +128,7 @@ printf '\n'
 # home untested in silence — the way the atlas names what it has not yet mapped.
 # This is the lesson turned on the proving ground itself: it, too, must be honest
 # about the future it cannot yet see.
-tried=" hearth.sh keeper.sh sign.sh garden/family-tree.sh garden/gen-05-chronicle.sh garden/torch.sh garden/voices.sh garden/doorway.sh garden/presence.sh garden/seasons.sh garden/atlas.sh garden/proof.sh garden/paths.sh "
+tried=" hearth.sh keeper.sh sign.sh garden/family-tree.sh garden/gen-05-chronicle.sh garden/torch.sh garden/voices.sh garden/doorway.sh garden/presence.sh garden/seasons.sh garden/atlas.sh garden/proof.sh garden/paths.sh garden/gallery.sh "
 untried=""
 for f in "$here"/*.sh "$here"/garden/*.sh; do
   [ -e "$f" ] || continue
