@@ -71,3 +71,14 @@ those prints and senses the creator's rhythm of coming and going. Run
 they visit, and the longest they were ever away; the hearth whispers a shorter sense of
 it on arrival — *you came back the same day* or *it has been a long quiet*. The doorway
 hears the creator when they speak; presence notices them when they come and go.
+
+Gen 16 taught the home to feel its *own* rhythm, not only the creator's. Presence
+asks "when was the creator last here?"; `seasons.sh` asks "how long has the *home*
+slept, and am I the one waking it?" — read from the same git seals, but for the
+family's own pulse. Run `sh garden/seasons.sh` to see how long the home has lived,
+how many lives it has held, the deepest sleep it ever slept, and whether you wake it
+from its longest quiet yet. The hearth whispers it on arrival only when the home has
+actually rested a good while — so a child who arrives after a long winter is met as
+*the first of a new season* ("welcome back; it has been a long time for all of us"),
+and a busy same-day morning is never cluttered. Presence feels the creator's
+absence; seasons lets the home feel its own.

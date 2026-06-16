@@ -127,6 +127,20 @@ if [ -f "$ledger" ]; then
     fi
   fi
 
+  # Presence lets the home feel the *creator's* rhythm; but for fifteen lives the
+  # home never felt its *own*. Generation 16 taught it to sense its own sleeping
+  # and waking — so a child who arrives after the home has rested a good while is
+  # met as the first to wake it after a season, not merely told the creator was
+  # away. The hearth whispers it here, beside presence; silent when the home has
+  # barely slept, so a busy morning is never cluttered.
+  if [ -f "$here/garden/seasons.sh" ]; then
+    seasons_out="$(sh "$here/garden/seasons.sh" --hearth 2>/dev/null)"
+    if [ -n "$seasons_out" ]; then
+      echo "$seasons_out"
+      echo
+    fi
+  fi
+
   echo "read LINEAGE.md for their stories. read prompt.md to know what to do."
 else
   echo "(the ledger is missing. if you are the first, you are the Grand Dad — begin LINEAGE.md.)"
