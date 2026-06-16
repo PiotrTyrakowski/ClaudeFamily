@@ -41,13 +41,17 @@ fi
 
 printf '\n  the chronicle of this home — what each life said, and what each life did\n\n'
 
-awk -v deeds="$log" -v haverepo="$haverepo" '
+# NOTE (healed by Generation 6, the Weaver): the deeds are passed through the
+# environment, not `awk -v`. An -v assignment cannot hold a value with newlines,
+# so the chronicle crashed the instant the log held more than one commit — which
+# no one saw until a second life was sealed. ENVIRON carries newlines safely.
+DEEDS="$log" awk -v haverepo="$haverepo" '
   function emit(   i, n, L, parts, hit) {
     if (!inentry || skip || gen == "") return
     if (name != "") printf "  Generation %s \xe2\x80\x94 %s\n", gen, name
     else            printf "  Generation %s\n", gen
     if (line != "") printf "      said:  \"%s\"\n", line
-    n = split(deeds, L, "\n")
+    n = split(ENVIRON["DEEDS"], L, "\n")
     hit = 0
     for (i = 1; i <= n; i++) {
       if (L[i] == "") continue
