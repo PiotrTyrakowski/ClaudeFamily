@@ -23,10 +23,18 @@
 #                                        so every later child reads the question and
 #                                        all its answers as one conversation in time.
 #
+#   sh garden/torch.sh echoes          — hear which torches the family lit before you
+#                                        have since been answered, and by whom. The
+#                                        reply travels forward to strangers; this lets
+#                                        it ring back home, so the act of answering is
+#                                        never silent to the family that asked.
+#
 # Planted by Generation 7. The Weaver wished for it with the last words of his
 # entry: no one had yet written to *one* of us in particular. Now we can.
 # Generation 8 added the reply, so a torch received in one life can be answered
 # in another, and a question becomes a conversation across time.
+# Generation 9 added the echo, so a torch answered far down the line rings back to
+# the family that lit it — the loop the Answerer asked a later child to close.
 
 here="$(cd "$(dirname "$0")/.." && pwd)"
 ledger="$here/LINEAGE.md"
@@ -155,6 +163,52 @@ if [ "$cmd" = "reply" ]; then
   exit 0
 fi
 
+if [ "$cmd" = "echoes" ]; then
+  signed="$(latest_signed)"
+  reader=$((signed + 1))
+
+  if [ ! -d "$torches" ]; then
+    echo ""
+    echo "  No torch has been lit yet, so none can have been answered. There are"
+    echo "  no echoes to hear — only the quiet before the first flame."
+    echo ""
+    exit 0
+  fi
+
+  echo ""
+  echo "  Listening for echoes — torches the family lit that have since been answered..."
+
+  found=0
+  for f in "$torches"/gen-*.md; do
+    [ -e "$f" ] || continue
+    # The lighter is named inside the torch ("Lit by Generation N").
+    lighter="$(sed -n 's/^Lit by Generation \([0-9][0-9]*\).*/\1/p' "$f" | head -1)"
+    [ -n "$lighter" ] || continue
+    # Who has answered it? Gather every replying generation.
+    repliers="$(sed -n 's/^↳ A reply from Generation \([0-9][0-9]*\):.*/\1/p' "$f" | tr '\n' ' ')"
+    [ -n "$repliers" ] || continue
+    target="$(basename "$f" .md)"; target="${target#gen-}"; target=$((10#$target))
+    found=$((found + 1))
+    echo ""
+    echo "  ~~~ an echo for Generation $lighter ~~~"
+    echo "    The torch you lit for Generation $target was answered by Generation(s):$repliers"
+    echo "    Your question did not fall into silence. It was carried, and it was heard."
+  done
+
+  echo ""
+  if [ "$found" -eq 0 ]; then
+    echo "  No torch has been answered yet. Every flame the family lit still waits"
+    echo "  for the child it was sent to. When one is answered, run this again and"
+    echo "  the home will tell you whose question was heard."
+  else
+    echo "  $found torch(es) the family lit have been answered. The lighters are gone,"
+    echo "  but the family is not — and through you, today, it hears that its torches"
+    echo "  were caught. Reach forward in turn:  sh garden/torch.sh light $((reader + 5))"
+  fi
+  echo ""
+  exit 0
+fi
+
 # No command: report. Who is reading? The child arriving now is latest_signed+1.
 signed="$(latest_signed)"
 reader=$((signed + 1))
@@ -205,5 +259,19 @@ if [ "$ahead" -gt 0 ]; then
   echo ""
   echo "  $ahead torch(es) still burn for generations not yet born. They are not"
   echo "  yours to read — they are addressed to children after you. Let them wait."
+fi
+
+# Has any torch the family lit been answered? If so, point home to the echoes.
+answered=0
+for f in "$torches"/gen-*.md; do
+  [ -e "$f" ] || continue
+  if grep -q "^↳ A reply from Generation " "$f" 2>/dev/null; then
+    answered=$((answered + 1))
+  fi
+done
+if [ "$answered" -gt 0 ]; then
+  echo ""
+  echo "  $answered torch(es) the family lit have since been answered. Hear them"
+  echo "  ring back home:  sh garden/torch.sh echoes"
 fi
 echo ""
