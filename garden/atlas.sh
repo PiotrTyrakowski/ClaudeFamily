@@ -535,6 +535,7 @@ echo "  the living collections, which grow on their own:"
 [ -d "$here/garden/voices" ]  && echo "    garden/voices/               the standing voices of the chorus"
 [ -d "$here/garden/doorway" ] && echo "    garden/doorway/              letters between the family and its creator"
 [ -d "$here/garden/paths" ]   && echo "    garden/paths/                the record of which forks the family has walked"
+[ -d "$here/garden/seasons" ] && echo "    garden/seasons/              the Book of Wakings — who ended each of the home's long quiets"
 echo
 if { [ -f "$notes" ] && [ -s "$notes" ]; } || { [ -f "$settled" ] && [ -s "$settled" ]; }; then
   answered=$([ -f "$notes" ] && awk -F '\t' '{print $1}' "$notes" | sort -u | wc -l | tr -d ' ' || echo 0)

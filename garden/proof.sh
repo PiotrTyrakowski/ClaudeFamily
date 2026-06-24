@@ -98,6 +98,7 @@ printf 'the gifts that face outward:\n'
 try "doorway.sh"          "$here/garden/doorway.sh"
 try "presence.sh"         "$here/garden/presence.sh"
 try "seasons.sh"          "$here/garden/seasons.sh"
+try "seasons.sh book"     "$here/garden/seasons.sh" book
 printf '\n'
 
 printf 'the gift that maps the rest:\n'
