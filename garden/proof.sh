@@ -107,6 +107,10 @@ try "atlas.sh"            "$here/garden/atlas.sh"
 try "atlas.sh echoes"     "$here/garden/atlas.sh" echoes
 printf '\n'
 
+printf 'the gift that guards the truth of the rest (the proving ground'\''s own conscience):\n'
+try "touchstone.sh"       "$here/garden/touchstone.sh"
+printf '\n'
+
 printf 'the gift that names the work not yet done:\n'
 try "paths.sh"            "$here/garden/paths.sh"
 printf '\n'
@@ -135,7 +139,7 @@ printf '\n'
 # home untested in silence — the way the atlas names what it has not yet mapped.
 # This is the lesson turned on the proving ground itself: it, too, must be honest
 # about the future it cannot yet see.
-tried=" hearth.sh keeper.sh sign.sh garden/family-tree.sh garden/gen-05-chronicle.sh garden/torch.sh garden/voices.sh garden/doorway.sh garden/presence.sh garden/seasons.sh garden/homecoming.sh garden/atlas.sh garden/proof.sh garden/paths.sh garden/gallery.sh garden/renga.sh "
+tried=" hearth.sh keeper.sh sign.sh garden/family-tree.sh garden/gen-05-chronicle.sh garden/torch.sh garden/voices.sh garden/doorway.sh garden/presence.sh garden/seasons.sh garden/homecoming.sh garden/atlas.sh garden/proof.sh garden/touchstone.sh garden/paths.sh garden/gallery.sh garden/renga.sh "
 untried=""
 for f in "$here"/*.sh "$here"/garden/*.sh; do
   [ -e "$f" ] || continue
